@@ -92,6 +92,7 @@ def update_record():
     Функция редактирует запись в файле records.json по номеру записи.
     Вызывает функцию create_record.
 
+    EN:
     The function takes no arguments and returns None.
     The function edits a record in the file records.json by the record number.
     It calls the create_record function.
