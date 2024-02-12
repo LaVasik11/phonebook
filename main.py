@@ -1,15 +1,15 @@
 import json
 
 
-def create_record() -> dict:
+def create_record(current_values: dict = None) -> dict:
     """
     RU:
-    Функция не принимает аргументов и возвращает словарь.
+    Функция может принимать словарь как аргумент. Функция возвращает словарь.
     Функция запрашивает у пользователя через input данные(name, surname, patronymic,
     name_organization, phone_work, phone_personal) собирает из них словарь и возвращает его.
 
     EN:
-    The function takes no arguments and returns a dictionary.
+    The function can take a dictionary as an argument. Dictionary return function.
     The function prompts the user via input for data (name, surname, patronymic,
     name_organization, phone_work, phone_personal), collects them into a dictionary, and returns it.
 
@@ -17,12 +17,15 @@ def create_record() -> dict:
     :rtype: dict
     """
 
-    name: str = input('Введите имя: ')
-    surname: str = input('Введите фамилию: ')
-    patronymic: str = input('Введите отчество: ')
-    name_organization: str = input('Введите название_организации: ')
-    phone_work: str = input('Введите телефон_рабочий: ')
-    phone_personal: str = input('Введите телефон_личный: ')
+    if current_values is None:
+        current_values = {}
+
+    name: str = input('Введите имя: ') or current_values.get("имя", "")
+    surname: str = input('Введите фамилию: ') or current_values.get("фамилия", "")
+    patronymic: str = input('Введите отчество: ') or current_values.get("отчество", "")
+    name_organization: str = input('Введите название_организации: ') or current_values.get("название_организации", "")
+    phone_work: str = input('Введите телефон_рабочий: ') or current_values.get("телефон_рабочий", "")
+    phone_personal: str = input('Введите телефон_личный: ') or current_values.get("телефон_личный", "")
 
     record: dict = {
         "имя": name,
@@ -34,7 +37,6 @@ def create_record() -> dict:
     }
 
     return record
-
 
 
 def show_record():
