@@ -203,7 +203,11 @@ def main():
     while True:
         print('Выберите действие: показать все записи - [s] | добавить запись - [a] | редоктировать запись - [u] | поиск по характеристикам - [sc]')
         action: str = input().lower().strip()
-        action_dict[action]()
+        try:
+            action_dict[action]()
+
+        except KeyError:
+            print('Введины некорекктные значения')
 
         print('\n'+'-'*80+'\n')
 
