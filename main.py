@@ -39,7 +39,6 @@ def create_record(current_values: dict = None) -> dict:
     return record
 
 
-
 def show_record():
     """
     RU:
