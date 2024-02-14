@@ -1,6 +1,5 @@
 import ast
 
-
 def create_record(current_values: dict = None) -> dict:
     """
     RU:
@@ -81,7 +80,8 @@ def add_record():
     new_record: dict = create_record()
 
     with open('records.txt', 'a', encoding='UTF-8') as f:
-        f.write(str(new_record)+'\n')
+        f.writelines('\n' + str(new_record))
+
 
 
 def update_record():
@@ -101,16 +101,15 @@ def update_record():
     with open('records.txt', 'r', encoding='utf-8') as f:
         records = f.readlines()
 
-        record_number = int(input('Введите номер записи которую хотите изменить: '))-1
-        if 0 <= record_number < len(records):
-            updated_data: dict = create_record(ast.literal_eval(records[record_number]))
-            records[record_number] = updated_data
-            with open('records.txt', 'w', encoding='utf-8') as file:
-                for line in records:
-                    file.writelines(str(line))
-            print("Запись успешно обновлена.")
-        else:
-            print("Запись с таким номером не найдена.")
+    record_number = int(input('Введите номер записи которую хотите изменить: ')) - 1
+    if 0 <= record_number < len(records):
+        updated_data = create_record(ast.literal_eval(records[record_number].strip()))
+        records[record_number] = str(updated_data)
+        with open('records.txt', 'w', encoding='utf-8') as file:
+            file.writelines(records)
+        print("Запись успешно обновлена.")
+    else:
+        print("Запись с таким номером не найдена.")
 
 
 
