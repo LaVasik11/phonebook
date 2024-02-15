@@ -39,24 +39,59 @@ def create_record(current_values: dict = None) -> dict:
     return record
 
 
-def show_record():
+def show_record(records=None, page_size=5):
     """
     RU:
-    Функция не принимает аргументов и возвращает None.
+    Функция может принимать список из которого будут выводиться записи
+     и размер страницы(количество записей на одной странице).
+    Вовзращает None.
     Функция печатает через print все записи из файла records.json.
 
     EN:
-    The function takes no arguments and returns None.
-    The function prints all records from the file records.json using print.
+    The function can accept a list from which records will be displayed
+     and page size (the number of records on one page).
+    Returns None.
+    The function prints all records from the Records.json file.
 
     :return: None
     """
 
-    with open('records.json', 'r', encoding='utf-8') as f:
-        records = json.load(f)
-        for n, record in enumerate(records, 1):
+    if not records:
+        with open('records.json', 'r', encoding='utf-8') as f:
+            records = json.load(f)
+
+    total_pages: int = len(records) // page_size + (1 if len(records) % page_size > 0 else 0)
+    current_page: int = 1
+
+    while True:
+        start: int = (current_page - 1) * page_size
+        end: int = start + page_size
+        page_records: list = records[start:end]
+
+        print(f"\nСтраница {current_page} из {total_pages}\n")
+        for n, record in enumerate(page_records, start=1):
             formatted_record = json.dumps(record, ensure_ascii=False, indent=4)
-            print(f'{n}. {formatted_record}')
+            print(f'{start + n}. {formatted_record}')
+            print('-' * 35)
+        print('\n' + '#' * 130 + '\n')
+
+        command: str = input("Введите 'n' для следующей страницы, 'p' для предыдущей, 'q' для выхода: ").lower()
+        print('\n\n\n')
+
+        if command == 'n':
+            if current_page < total_pages:
+                current_page += 1
+            else:
+                print("Это последняя страница.")
+        elif command == 'p':
+            if current_page > 1:
+                current_page -= 1
+            else:
+                print("Это первая страница.")
+        elif command == 'q':
+            break
+        else:
+            print("Неизвестная команда. Пожалуйста, попробуйте снова.")
 
 
 def add_record():
@@ -169,9 +204,7 @@ def scan_recors():
 
     if filtered_records:
         print("Найденные записи:")
-        for n, record in enumerate(filtered_records, 1):
-            formatted_record = json.dumps(record, ensure_ascii=False, indent=4)
-            print(f'{n}. {formatted_record}')
+        show_record(filtered_records)
     else:
         print('Такие записи не найдены.')
 

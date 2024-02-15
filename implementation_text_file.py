@@ -39,27 +39,60 @@ def create_record(current_values: dict = None) -> dict:
 
 
 
-def show_record():
+def show_record(records=None, page_size=5):
     """
     RU:
-    Функция не принимает аргументов и возвращает None.
+    Функция может принимать список из которого будут выводиться записи
+     и размер страницы(количество записей на одной странице).
+    Вовзращает None.
     Функция печатает через print все записи из файла records.txt.
 
     EN:
-    The function takes no arguments and returns None.
-    The function prints all records from the file records.txt using print.
+    The function can accept a list from which records will be displayed
+     and page size (the number of records on one page).
+    Returns None.
+    The function prints all records from the Records.txt file.
 
     :return: None
     """
 
-    with open('records.txt', 'r', encoding='utf-8') as f:
-        records = f.readlines()
-        for n, record in enumerate(records, 1):
-            print(n)
-            d = ast.literal_eval(record)
-            for key, value in d.items():
+    if not records:
+        with open('records.txt', 'r', encoding='utf-8') as f:
+            records = [ast.literal_eval(line) for line in f.readlines()]
+
+    total_pages: int = len(records) // page_size + (1 if len(records) % page_size > 0 else 0)
+    current_page: int = 1
+
+    while True:
+        start: int = (current_page - 1) * page_size
+        end: int = start + page_size
+        page_records: list = records[start:end]
+
+        print(f"\nСтраница {current_page} из {total_pages}\n")
+        for n, record in enumerate(page_records, start=1):
+            print(f"Запись {start + n}")
+            for key, value in record.items():
                 print(f"{key}: {value}")
-            print('-'*35)
+            print('-' * 35)
+        print('\n' + '#' * 130 + '\n')
+
+        command: str = input("Введите 'n' для следующей страницы, 'p' для предыдущей, 'q' для выхода: ").lower()
+        print('\n\n\n')
+
+        if command == 'n':
+            if current_page < total_pages:
+                current_page += 1
+            else:
+                print("Это последняя страница.")
+        elif command == 'p':
+            if current_page > 1:
+                current_page -= 1
+            else:
+                print("Это первая страница.")
+        elif command == 'q':
+            break
+        else:
+            print("Неизвестная команда.")
 
 
 def add_record():
@@ -166,12 +199,10 @@ def scan_recors():
                 filtered_records.append(record)
 
     if filtered_records:
+        print(filtered_records)
         print("Найденные записи:")
-        for n, record in enumerate(filtered_records, 1):
-            d = ast.literal_eval(str(record).strip())
-            for key, value in d.items():
-                print(f"{key}: {value}")
-            print('-' * 35)
+        show_record(filtered_records)
+
     else:
         print('Такие записи не найдены.')
 
