@@ -176,8 +176,30 @@ def scan_recors():
         print('Такие записи не найдены.')
 
 
+def delete_record():
+    """
+    RU:
+    Функция не принимает аргументов и возвращает None.
+    Функция удаляет запись из файла records.json по её номеру.
 
+    EN:
+    The function takes no arguments and does not return None.
+    Function for deleting a record from the Records.json file by its number.
 
+    :return: None
+    """
+
+    with open('records.json', 'r', encoding='utf-8') as file:
+        records = json.load(file)
+
+        record_number = int(input('Номер какой записи вы хотите удалить?: '))-1
+        if 0 <= record_number < len(records):
+            del records[record_number]
+            with open('records.json', 'w', encoding='utf-8') as file:
+                json.dump(records, file, ensure_ascii=False, indent=4)
+            print("Запись успешно удаленна.")
+        else:
+            print("Запись с таким номером не найдена.")
 
 
 def main():
@@ -195,10 +217,11 @@ def main():
     :return: None
     """
     action_dict: dict = {'s': show_record,
-                   'a': add_record,
-                   'u': update_record,
-                   'sc': scan_recors
-                   }
+                         'a': add_record,
+                         'u': update_record,
+                         'sc': scan_recors,
+                         'd': delete_record
+                         }
     while True:
         print('Выберите действие: показать все записи - [s] | добавить запись - [a] | редоктировать запись - [u] | поиск по характеристикам - [sc]')
         action: str = input().lower().strip()
@@ -208,7 +231,7 @@ def main():
         except KeyError:
             print('Введины некорекктные значения')
 
-        print('\n'+'-'*80+'\n')
+        print('\n'+'-'*130+'\n')
 
 
 if __name__ == '__main__':

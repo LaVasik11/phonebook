@@ -59,7 +59,7 @@ def show_record():
             d = ast.literal_eval(record)
             for key, value in d.items():
                 print(f"{key}: {value}")
-            print('-'*20)
+            print('-'*35)
 
 
 def add_record():
@@ -171,13 +171,36 @@ def scan_recors():
             d = ast.literal_eval(str(record).strip())
             for key, value in d.items():
                 print(f"{key}: {value}")
-            print('-' * 20)
+            print('-' * 35)
     else:
         print('Такие записи не найдены.')
 
 
 
+def delete_record():
+    """
+    RU:
+    Функция не принимает аргументов и возвращает None.
+    Функция удаляет запись из файла records.txt по её номеру.
 
+    EN:
+    The function takes no arguments and does not return None.
+    Function for deleting a record from the Records.txt file by its number.
+
+    :return: None
+    """
+
+    with open('records.txt', 'r', encoding='utf-8') as file:
+        records = file.readlines()
+
+        record_number = int(input('Номер какой записи вы хотите удалить?: '))-1
+        if 0 <= record_number < len(records):
+            del records[record_number]
+            with open('records.txt', 'w', encoding='utf-8') as file:
+                file.writelines(records)
+            print("Запись успешно удаленна.")
+        else:
+            print("Запись с таким номером не найдена.")
 
 
 def main():
@@ -197,7 +220,8 @@ def main():
     action_dict: dict = {'s': show_record,
                          'a': add_record,
                          'u': update_record,
-                         'sc': scan_recors
+                         'sc': scan_recors,
+                         'd': delete_record
                          }
     while True:
         print('Выберите действие: показать все записи - [s] | добавить запись - [a] | редоктировать запись - [u] | поиск по характеристикам - [sc]')
@@ -208,7 +232,7 @@ def main():
         except KeyError:
             print('Введины некорекктные значения')
 
-        print('\n'+'#'*60+'\n')
+        print('\n'+'#'*130+'\n')
 
 
 if __name__ == '__main__':
